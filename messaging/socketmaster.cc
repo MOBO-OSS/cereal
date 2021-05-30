@@ -48,9 +48,10 @@ struct SubMaster::SubMessage {
   std::string name;
   SubSocket *socket = nullptr;
   int freq = 0;
-  bool updated = false, alive = false, valid = true, ignore_alive;
-  uint64_t rcv_time = 0, rcv_frame = 0;
+  bool ignore_alive;
   void *allocated_msg_reader = nullptr;
+  bool updated = false, alive = false, valid = true;
+  uint64_t rcv_time = 0, rcv_frame = 0;
   capnp::FlatArrayMessageReader *msg_reader = nullptr;
   AlignedBuffer aligned_buf;
   cereal::Event::Reader event;
@@ -70,7 +71,9 @@ SubMaster::SubMaster(const std::vector<const char *> &service_list, const char *
       .socket = socket,
       .freq = serv->frequency,
       .ignore_alive = inList(ignore_alive, name),
-      .allocated_msg_reader = malloc(sizeof(capnp::FlatArrayMessageReader))};
+      .allocated_msg_reader = malloc(sizeof(capnp::FlatArrayMessageReader))
+    };
+
     m->msg_reader = new (m->allocated_msg_reader) capnp::FlatArrayMessageReader({});
     messages_[socket] = m;
     services_[name] = m;

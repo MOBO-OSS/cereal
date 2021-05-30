@@ -66,10 +66,11 @@ int ipc_sendrecv_with_fds(bool send, int fd, void *buf, size_t buf_size, int* fd
     .iov_base = buf,
     .iov_len = buf_size,
   };
-  struct msghdr msg = {
-    .msg_iov = &iov,
-    .msg_iovlen = 1,
-  };
+  struct msghdr msg;
+  // = {
+    msg.msg_iov = &iov;
+    msg.msg_iovlen = 1;
+  // };
 
   if (num_fds > 0) {
     assert(fds);

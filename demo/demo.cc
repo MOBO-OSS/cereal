@@ -24,11 +24,13 @@ int main() {
     *(uint64_t*)data = i;
     pub_sock->send(data, 8);
 
+    printf("send data: %lld\n", *(uint64_t*)data);
     auto r = poller->poll(100);
 
     for (auto p : r){
       Message * m = p->receive();
       uint64_t ii = *(uint64_t*)m->getData();
+      printf("receive data: %lld\n", ii);
       assert(i == ii);
       delete m;
     }

@@ -17,7 +17,8 @@ class VisionIpcServer {
   cl_context ctx = nullptr;
   uint64_t server_id;
 
-  std::atomic<bool> should_exit = false;
+ // std::atomic<bool> should_exit = false;
+  bool should_exit = false;
   std::string name;
   std::thread listener_thread;
 

@@ -9,7 +9,8 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 
-std::atomic<int> offset = 0;
+// std::atomic<int> offset = 0;
+int offset = 0;
 
 static void *malloc_with_fd(size_t len, int *fd) {
   char full_path[0x100];

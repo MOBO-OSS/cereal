@@ -164,16 +164,27 @@ VisionIpcServer::~VisionIpcServer(){
   listener_thread.join();
 
   // VisionBuf cleanup
-  for( auto const& [type, buf] : buffers ) {
-    for (VisionBuf* b : buf){
+  for( auto const& item : buffers ) {
+    for (VisionBuf* b : item.second){
       b->free();
       delete b;
     }
   }
+  // for( auto const& [type, buf] : buffers ) {
+  //   for (VisionBuf* b : buf){
+  //     b->free();
+  //     delete b;
+  //   }
+  // }
 
   // Messaging cleanup
-  for( auto const& [type, sock] : sockets ) {
-    delete sock;
+  for(auto const & sock : sockets) {
+      delete sock.second;
   }
+
+  // for( auto const& [type, sock] : sockets ) {
+  //   delete sock;
+  // }
+
   delete msg_ctx;
 }
