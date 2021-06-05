@@ -9,6 +9,16 @@
 
 #define MSGS 1e5
 
+typedef struct DataFormat
+{
+  /* data */
+  uint64_t x;
+  uint64_t y;
+  uint64_t z;
+  std::vector<float> array;
+};
+
+
 int main() {
   Context * c = Context::create();
   SubSocket * sub_sock = SubSocket::create(c, "controlsState");
@@ -20,18 +30,23 @@ int main() {
 
   auto start = std::chrono::steady_clock::now();
 
+  DataFormat sData;
+
   for (uint64_t i = 0; i < MSGS; i++){
     *(uint64_t*)data = i;
-    pub_sock->send(data, 8);
+    sData.x = i;
+    sData.array.push_back(i/10000);
 
-    printf("send data: %lld\n", *(uint64_t*)data);
+    pub_sock->send((char*)&sData, sizeof(sData));
+
+    printf("send data: %lld\n", sData.x);
     auto r = poller->poll(100);
 
     for (auto p : r){
       Message * m = p->receive();
-      uint64_t ii = *(uint64_t*)m->getData();
-      printf("receive data: %lld\n", ii);
-      assert(i == ii);
+      DataFormat * ii = (DataFormat *)m->getData();
+      printf("receive data: %lld\n", ii->x);
+      assert(i == ii->x);
       delete m;
     }
   }
